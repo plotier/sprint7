@@ -1,0 +1,21 @@
+.wholePopup{
+    background-color: rgba(0,0,0,0.4);
+ 
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.balloonPopup{
+    padding-top: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid;
+    margin-top: 13rem;
+    margin-left:90px;
+    background-color: white;
+    width: 40rem;
+    height: 3rem;
+    border-radius: 10px;
+}
