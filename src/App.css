@@ -14,3 +14,9 @@
 .infoBtn:hover{
   cursor: pointer
 }
+.personalInput{
+ margin-bottom: 10px;
+}
+.inputContainer{
+  width: 50%;
+}

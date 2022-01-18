@@ -5,7 +5,8 @@ import { Panell } from './styled';
 import { NumInput } from './components/NumInput.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
-import {Popup} from './components/Popup.js'
+import { Popup } from './components/Popup.js'
+import { Presupuesto } from './components/Presupuesto';
 
 export const Home = () => {
 
@@ -151,59 +152,126 @@ export const Home = () => {
     }
     else { setSumaPrecio(0) }
   })
-  const[contenidoWeb, setContenidoWeb]=useState("")
-  const buttonPopFunction = (dato) =>{
+  const [contenidoWeb, setContenidoWeb] = useState("")
+  const buttonPopFunction = (dato) => {
     setButtonPupop(!buttonPupop);
     setContenidoWeb(dato)
+  }
+
+  const[datosPersonales, setDatosPersonales]= useState({
+    nombre:"",
+    tituloPresupuesto:""
+  })
+  const handlePersonalInput = e =>{
+    setDatosPersonales({
+      ...datosPersonales,
+      [e.target.name] : e.target.value
+
+    })
+  }
+
+  const [presupuesto, setPresupuesto]=useState({
+    nombre:"",
+    titulo:"",
+    pagWeb:false,
+
+    extras:{
+           paginas: 1,
+           idiomas: 1},
+    SEO:false,
+    ads:false,
+    plusWeb:0,
+    total:0
+  })
+
+  const enviarDatos = event => {
+    event.preventDefault()
+    const paginaWeb = isCheckedOne ? true : false;
+    const consultoriaSEO = isCheckedTwo ? true : false;
+    const GoogleAds = isCheckedThree ? true : false;
+    const now = new Date();
+    const simpleDate= now.getDate() + "/" + now.getMonth() +1 + "/" + now.getFullYear()
+
+    setPresupuesto({
+      ...presupuesto,
+      nombre:datosPersonales.nombre,
+      titulo:datosPersonales.tituloPresupuesto,
+      pagWeb:paginaWeb,
+      extras:{
+        paginas: extraWeb.paginas,
+        idiomas: extraWeb.idiomas},
+      SEO:consultoriaSEO,
+      ads:GoogleAds,
+      plus:plusWeb,
+      total:total,
+      fecha:simpleDate
+    })
   }
 
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
-    <div>
-      <Popup closingFunction={buttonPopFunction} contenido={contenidoWeb} trigger={buttonPupop}/>
-    <div className='mainContainer'>
-      <div className="form-check">
-        <input className="form-check-input" type="checkbox" value="500" id="web" onChange={e => handleOnChangeOne(e)} checked={isCheckedOne} />
-        <label className="form-check-label" htmlFor="flexCheckDefault">
-          Una página web (€500)
-        </label>
-      </div>
+    <div className='row'>
+      <div className="col">
+      <Popup closingFunction={buttonPopFunction} contenido={contenidoWeb} trigger={buttonPupop} />
+      <div className='mainContainer'>
 
-      {/*Renderizado condicional, si está checkeado el primer checkbox*/}
-      {isCheckedOne &&
-        <Panell>
-          <form className='d-flex flex-column'>
-            <label htmlFor="paginas" className='m-2'>Número de páginas:
-              <button type="button" className="btn btn-success" onClick={refFunctionRest}>-</button>  <NumInput referencia={refInput} valor={extraWeb.paginas} name={"paginas"} funcion={handlePagNum} /><button type="button" className="btn btn-success" onClick={refFunction}>+</button>
-             <FontAwesomeIcon onClick={()=>buttonPopFunction("paginas")} id="1" className='infoBtn' icon={faInfoCircle} />
+        <form onSubmit={enviarDatos}>
+
+          <div className="form-check">
+            <input className="form-check-input" type="checkbox" value="500" id="web" onChange={e => handleOnChangeOne(e)} checked={isCheckedOne} />
+            <label className="form-check-label" htmlFor="flexCheckDefault">
+              Una página web (€500)
             </label>
-            <label htmlFor="idiomas" className='m-2'>Número de idiomas:
-              <button type="button" className="btn btn-success" onClick={refFunctionRest2}>-</button> <NumInput referencia={refInput2} valor={extraWeb.idiomas} name={"idiomas"} funcion={handlePagNum} /><button type="button" className="btn btn-success" onClick={refFunction2}>+</button>
-              <FontAwesomeIcon onClick={()=>buttonPopFunction("idiomas")}  id="2" className='infoBtn' icon={faInfoCircle} />
+          </div>
+
+          {/*Renderizado condicional, si está checkeado el primer checkbox*/}
+          {isCheckedOne &&
+            <Panell>
+              {/* !!!!!!este div y su closing tag eran form*/}     <div className='d-flex flex-column'>
+                <label htmlFor="paginas" className='m-2'>Número de páginas:
+                  <button type="button" className="btn btn-success" onClick={refFunctionRest}>-</button>  <NumInput referencia={refInput} valor={extraWeb.paginas} name={"paginas"} funcion={handlePagNum} /><button type="button" className="btn btn-success" onClick={refFunction}>+</button>
+                  <FontAwesomeIcon onClick={() => buttonPopFunction("paginas")} id="1" className='infoBtn' icon={faInfoCircle} />
+                </label>
+                <label htmlFor="idiomas" className='m-2'>Número de idiomas:
+                  <button type="button" className="btn btn-success" onClick={refFunctionRest2}>-</button> <NumInput referencia={refInput2} valor={extraWeb.idiomas} name={"idiomas"} funcion={handlePagNum} /><button type="button" className="btn btn-success" onClick={refFunction2}>+</button>
+                  <FontAwesomeIcon onClick={() => buttonPopFunction("idiomas")} id="2" className='infoBtn' icon={faInfoCircle} />
+                </label>
+              </div>
+            </Panell>
+          }
+
+
+          <div className="form-check">
+            <input className="form-check-input" type="checkbox" value="300" id="SEO" onChange={e => handleOnChangeTwo(e)} checked={isCheckedTwo} />
+            <label className="form-check-label" htmlFor="flexCheckDefault">
+              Una consultoría SEO (€300)
             </label>
-          </form>
-        </Panell>
-      }
-
-
-      <div className="form-check">
-        <input className="form-check-input" type="checkbox" value="300" id="SEO" onChange={e => handleOnChangeTwo(e)} checked={isCheckedTwo} />
-        <label className="form-check-label" htmlFor="flexCheckDefault">
-          Una consultoría SEO (€300)
-        </label>
+          </div>
+          <div className="form-check">
+            <input className="form-check-input" type="checkbox" value="200" id="ads" onChange={e => handleOnChangeThree(e)} checked={isCheckedThree} />
+            <label className="form-check-label" htmlFor="flexCheckDefault">
+              Una campaña de Google Ads (€200)
+            </label>
+          </div>
+          <div className='inputContainer'>
+          <input type="text" className='form-control personalInput' name="nombre" placeholder='Insertar Nombre' onChange={e=>handlePersonalInput(e)}></input>
+          <input type="text" className='form-control personalInput' name="tituloPresupuesto" placeholder='Insertar Título Presupuesto' onChange={e=>handlePersonalInput(e)}></input>
+</div>
+          <div>
+            <h5>Total : {total} </h5>
+          </div>
+          <div>
+            <button className='btn btn-primary' type='submit'>Enviar</button>
+          </div>
+        </form>
       </div>
-      <div className="form-check">
-        <input className="form-check-input" type="checkbox" value="200" id="ads" onChange={e => handleOnChangeThree(e)} checked={isCheckedThree} />
-        <label className="form-check-label" htmlFor="flexCheckDefault">
-          Una campaña de Google Ads (€200)
-        </label>
       </div>
-      <div>
-        <h5>Total : {total} </h5>
+      <div className="col">
+       <Presupuesto nombre={presupuesto.nombre} titulo={presupuesto.titulo} pagWeb={presupuesto.pagWeb}
+       paginas={presupuesto.extras.paginas} idiomas={presupuesto.extras.idiomas} seo={presupuesto.SEO} 
+       ads={presupuesto.ads} plus={presupuesto.plus} total = {presupuesto.total} fecha={presupuesto.fecha} />
       </div>
-
-    </div>
     </div>
   );
 
