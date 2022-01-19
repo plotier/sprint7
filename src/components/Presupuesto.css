@@ -1,0 +1,12 @@
+.btnMasInfo{
+margin-bottom: 5px;
+}
+.presupuestoCuadro{
+    border:2px solid;
+    border-radius: 5px;
+    width: 300px;
+    margin-bottom: 5px;
+}
+.col{
+    padding-left: 15px;
+}

@@ -158,31 +158,19 @@ export const Home = () => {
     setContenidoWeb(dato)
   }
 
-  const[datosPersonales, setDatosPersonales]= useState({
-    nombre:"",
-    tituloPresupuesto:""
+  const [datosPersonales, setDatosPersonales] = useState({
+    nombre: "",
+    tituloPresupuesto: ""
   })
-  const handlePersonalInput = e =>{
+  const handlePersonalInput = e => {
     setDatosPersonales({
       ...datosPersonales,
-      [e.target.name] : e.target.value
+      [e.target.name]: e.target.value
 
     })
   }
 
-  const [presupuesto, setPresupuesto]=useState({
-    nombre:"",
-    titulo:"",
-    pagWeb:false,
-
-    extras:{
-           paginas: 1,
-           idiomas: 1},
-    SEO:false,
-    ads:false,
-    plusWeb:0,
-    total:0
-  })
+  const [presupuesto, setPresupuesto] = useState([])
 
   const enviarDatos = event => {
     event.preventDefault()
@@ -190,87 +178,181 @@ export const Home = () => {
     const consultoriaSEO = isCheckedTwo ? true : false;
     const GoogleAds = isCheckedThree ? true : false;
     const now = new Date();
-    const simpleDate= now.getDate() + "/" + now.getMonth() +1 + "/" + now.getFullYear()
+    const simpleDate = now.getDate() + "/" + now.getMonth() + 1 + "/" + now.getFullYear() + " At " +now.getHours()+" : "+now.getMinutes()+" : "+now.getSeconds()
 
-    setPresupuesto({
-      ...presupuesto,
-      nombre:datosPersonales.nombre,
-      titulo:datosPersonales.tituloPresupuesto,
-      pagWeb:paginaWeb,
-      extras:{
-        paginas: extraWeb.paginas,
-        idiomas: extraWeb.idiomas},
-      SEO:consultoriaSEO,
-      ads:GoogleAds,
-      plus:plusWeb,
-      total:total,
-      fecha:simpleDate
-    })
+    setPresupuesto([
+      ...presupuesto, {
+        nombre: datosPersonales.nombre,
+        titulo: datosPersonales.tituloPresupuesto,
+        pagWeb: paginaWeb,
+        extras: {
+          paginas: extraWeb.paginas,
+          idiomas: extraWeb.idiomas
+        },
+        SEO: consultoriaSEO,
+        ads: GoogleAds,
+        plus: plusWeb,
+        total: total,
+        fecha: simpleDate,
+        fechaCompleta:now
+      }])
+    // setOriginalPresupuesto([
+    //   ...presupuesto, {
+    //     nombre: datosPersonales.nombre,
+    //     titulo: datosPersonales.tituloPresupuesto,
+    //     pagWeb: paginaWeb,
+    //     extras: {
+    //       paginas: extraWeb.paginas,
+    //       idiomas: extraWeb.idiomas
+    //     },
+    //     SEO: consultoriaSEO,
+    //     ads: GoogleAds,
+    //     plus: plusWeb,
+    //     total: total,
+    //     fecha: simpleDate,
+    //     fechaCompleta:now
+    //   }])
+      setOrdenadoAbc(false)
+      setDateCheck(false)
+      setReiniciado(true)
   }
+
+  //ordenar alfabeticamente
+  const [presupuestoAbc, setPresupuestoAbc] = useState([])
+  const [ordenadoAbc, setOrdenadoAbc] = useState(false)
+  // const [originalPresupuesto, setOriginalPresupuesto] = useState([])
+  const [ordenadoDate, setOrdenadoDate] = useState([])
+  const[dateCheck, setDateCheck] = useState(false)
+  const[reiniciado, setReiniciado] = useState(true)
+
+
+  const sortBasicFunction = () => {
+    const copyPresupuesto = [...presupuesto]
+    setPresupuestoAbc(
+      copyPresupuesto.sort((a, b) => a.titulo.localeCompare(b.titulo))
+    )
+    setOrdenadoAbc(true)
+    setReiniciado(false)
+    setDateCheck(false)
+  }
+  //ordenar por fecha
+  const sortDateFunction = () => {
+    const copyPresupuesto = [...presupuesto]
+    setOrdenadoDate(
+      copyPresupuesto.sort(function(a,b){
+        // Turn strings into dates, and then subtract them
+        // to get a value that is either negative, positive, or zero.
+        return new Date(b.fechaCompleta) - new Date(a.fechaCompleta);
+      })
+    )
+    setOrdenadoAbc(false)
+    setDateCheck(true)
+    setReiniciado(false)
+    console.log(ordenadoDate)
+  }
+
+  const reiniciarFunction = () => {
+    setOrdenadoAbc(false)
+    setDateCheck(false)
+    setReiniciado(true)
+
+  }
+
+
 
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <div className='row'>
       <div className="col">
-      <Popup closingFunction={buttonPopFunction} contenido={contenidoWeb} trigger={buttonPupop} />
-      <div className='mainContainer'>
+        <Popup closingFunction={buttonPopFunction} contenido={contenidoWeb} trigger={buttonPupop} />
+        <div className='mainContainer'>
 
-        <form onSubmit={enviarDatos}>
+          <form onSubmit={enviarDatos}>
 
-          <div className="form-check">
-            <input className="form-check-input" type="checkbox" value="500" id="web" onChange={e => handleOnChangeOne(e)} checked={isCheckedOne} />
-            <label className="form-check-label" htmlFor="flexCheckDefault">
-              Una página web (€500)
-            </label>
-          </div>
+            <div className="form-check">
+              <input className="form-check-input" type="checkbox" value="500" id="web" onChange={e => handleOnChangeOne(e)} checked={isCheckedOne} />
+              <label className="form-check-label" htmlFor="flexCheckDefault">
+                Una página web (€500)
+              </label>
+            </div>
 
-          {/*Renderizado condicional, si está checkeado el primer checkbox*/}
-          {isCheckedOne &&
-            <Panell>
-              {/* !!!!!!este div y su closing tag eran form*/}     <div className='d-flex flex-column'>
-                <label htmlFor="paginas" className='m-2'>Número de páginas:
-                  <button type="button" className="btn btn-success" onClick={refFunctionRest}>-</button>  <NumInput referencia={refInput} valor={extraWeb.paginas} name={"paginas"} funcion={handlePagNum} /><button type="button" className="btn btn-success" onClick={refFunction}>+</button>
-                  <FontAwesomeIcon onClick={() => buttonPopFunction("paginas")} id="1" className='infoBtn' icon={faInfoCircle} />
-                </label>
-                <label htmlFor="idiomas" className='m-2'>Número de idiomas:
-                  <button type="button" className="btn btn-success" onClick={refFunctionRest2}>-</button> <NumInput referencia={refInput2} valor={extraWeb.idiomas} name={"idiomas"} funcion={handlePagNum} /><button type="button" className="btn btn-success" onClick={refFunction2}>+</button>
-                  <FontAwesomeIcon onClick={() => buttonPopFunction("idiomas")} id="2" className='infoBtn' icon={faInfoCircle} />
-                </label>
-              </div>
-            </Panell>
-          }
+            {/*Renderizado condicional, si está checkeado el primer checkbox*/}
+            {isCheckedOne &&
+              <Panell>
+                {/* !!!!!!este div y su closing tag eran form*/}     <div className='d-flex flex-column'>
+                  <label htmlFor="paginas" className='m-2'>Número de páginas:
+                    <button type="button" className="btn btn-success" onClick={refFunctionRest}>-</button>  <NumInput referencia={refInput} valor={extraWeb.paginas} name={"paginas"} funcion={handlePagNum} /><button type="button" className="btn btn-success" onClick={refFunction}>+</button>
+                    <FontAwesomeIcon onClick={() => buttonPopFunction("paginas")} id="1" className='infoBtn' icon={faInfoCircle} />
+                  </label>
+                  <label htmlFor="idiomas" className='m-2'>Número de idiomas:
+                    <button type="button" className="btn btn-success" onClick={refFunctionRest2}>-</button> <NumInput referencia={refInput2} valor={extraWeb.idiomas} name={"idiomas"} funcion={handlePagNum} /><button type="button" className="btn btn-success" onClick={refFunction2}>+</button>
+                    <FontAwesomeIcon onClick={() => buttonPopFunction("idiomas")} id="2" className='infoBtn' icon={faInfoCircle} />
+                  </label>
+                </div>
+              </Panell>
+            }
 
 
-          <div className="form-check">
-            <input className="form-check-input" type="checkbox" value="300" id="SEO" onChange={e => handleOnChangeTwo(e)} checked={isCheckedTwo} />
-            <label className="form-check-label" htmlFor="flexCheckDefault">
-              Una consultoría SEO (€300)
-            </label>
-          </div>
-          <div className="form-check">
-            <input className="form-check-input" type="checkbox" value="200" id="ads" onChange={e => handleOnChangeThree(e)} checked={isCheckedThree} />
-            <label className="form-check-label" htmlFor="flexCheckDefault">
-              Una campaña de Google Ads (€200)
-            </label>
-          </div>
-          <div className='inputContainer'>
-          <input type="text" className='form-control personalInput' name="nombre" placeholder='Insertar Nombre' onChange={e=>handlePersonalInput(e)}></input>
-          <input type="text" className='form-control personalInput' name="tituloPresupuesto" placeholder='Insertar Título Presupuesto' onChange={e=>handlePersonalInput(e)}></input>
-</div>
-          <div>
-            <h5>Total : {total} </h5>
-          </div>
-          <div>
-            <button className='btn btn-primary' type='submit'>Enviar</button>
-          </div>
-        </form>
-      </div>
+            <div className="form-check">
+              <input className="form-check-input" type="checkbox" value="300" id="SEO" onChange={e => handleOnChangeTwo(e)} checked={isCheckedTwo} />
+              <label className="form-check-label" htmlFor="flexCheckDefault">
+                Una consultoría SEO (€300)
+              </label>
+            </div>
+            <div className="form-check">
+              <input className="form-check-input" type="checkbox" value="200" id="ads" onChange={e => handleOnChangeThree(e)} checked={isCheckedThree} />
+              <label className="form-check-label" htmlFor="flexCheckDefault">
+                Una campaña de Google Ads (€200)
+              </label>
+            </div>
+            <div className='inputContainer'>
+              <input type="text" className='form-control personalInput' name="nombre" placeholder='Insertar Nombre' onChange={e => handlePersonalInput(e)}></input>
+              <input type="text" className='form-control personalInput' name="tituloPresupuesto" placeholder='Insertar Título Presupuesto' onChange={e => handlePersonalInput(e)}></input>
+            </div>
+            <div>
+              <h5>Total : {total} </h5>
+            </div>
+            <div>
+              <button className='btn btn-primary' type='submit'>Enviar</button>
+            </div>
+          </form>
+        </div>
       </div>
       <div className="col">
-       <Presupuesto nombre={presupuesto.nombre} titulo={presupuesto.titulo} pagWeb={presupuesto.pagWeb}
-       paginas={presupuesto.extras.paginas} idiomas={presupuesto.extras.idiomas} seo={presupuesto.SEO} 
-       ads={presupuesto.ads} plus={presupuesto.plus} total = {presupuesto.total} fecha={presupuesto.fecha} />
+        <span>
+          <button type="button" className="btn btn-secondary btn-sm" onClick={sortBasicFunction}>Alfabèticament</button>
+          <button type="button" className="btn btn-secondary btn-sm" onClick={sortDateFunction}>Per data</button>
+          <button type="button" className="btn btn-secondary btn-sm" onClick={reiniciarFunction}>Reinicialitzar </button>
+        </span>
+        {ordenadoAbc ?
+          presupuestoAbc.map(item =>
+            <Presupuesto nombre={item.nombre} titulo={item.titulo} pagWeb={item.pagWeb}
+              paginas={item.extras.paginas} idiomas={item.extras.idiomas} seo={item.SEO}
+              ads={item.ads} plus={item.plus} total={item.total} fecha={item.fecha} />
+
+          ) :""}
+        {dateCheck ?
+          ordenadoDate.map(item =>
+            <Presupuesto nombre={item.nombre} titulo={item.titulo} pagWeb={item.pagWeb}
+              paginas={item.extras.paginas} idiomas={item.extras.idiomas} seo={item.SEO}
+              ads={item.ads} plus={item.plus} total={item.total} fecha={item.fecha} />
+
+          ) :""
+
+        }
+        {reiniciado ?//acá mapeaba el presupuestoOriginal
+          presupuesto.map(item =>
+            <Presupuesto nombre={item.nombre} titulo={item.titulo} pagWeb={item.pagWeb}
+              paginas={item.extras.paginas} idiomas={item.extras.idiomas} seo={item.SEO}
+              ads={item.ads} plus={item.plus} total={item.total} fecha={item.fecha} />
+
+          ) :""
+
+        }
+        {/* <Presupuesto nombre={presupuesto.nombre} titulo={presupuesto.titulo} pagWeb={presupuesto.pagWeb}
+       paginas={presupuesto.extras.paginas} idiomas={presupuesto.extras.idiomas} seo={presupuesto.SEO}
+       ads={presupuesto.ads} plus={presupuesto.plus} total = {presupuesto.total} fecha={presupuesto.fecha} /> */}
       </div>
     </div>
   );
