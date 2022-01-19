@@ -45,6 +45,11 @@ export const Home = () => {
     valueTotalPrice != null ? setTotalPrice(JSON.parse(valueTotalPrice)) : valueTotalPrice = totalPrice
     const valueExtraWeb = localStorage.getItem('extraWeb');
     valueExtraWeb != null ? setExtraWeb(JSON.parse(valueExtraWeb)) : valueExtraWeb = extraWeb
+    const valuePresupuesto = localStorage.getItem('presupuesto');
+    valuePresupuesto != null ? setPresupuesto(JSON.parse(valuePresupuesto)) : valuePresupuesto = presupuesto
+    const valuePresupuestoAbc = localStorage.getItem('presupuestoAbc');
+    valuePresupuestoAbc != null ? setPresupuestoAbc(JSON.parse(valuePresupuestoAbc)) : valuePresupuestoAbc = presupuestoAbc
+    
   }, [])
 
   useEffect(() => {
@@ -53,6 +58,8 @@ export const Home = () => {
     localStorage.setItem('thirdCheckBox', JSON.stringify(isCheckedThree))
     localStorage.setItem('totalPrice', JSON.stringify(totalPrice))
     localStorage.setItem('extraWeb', JSON.stringify(extraWeb))
+    localStorage.setItem('presupuesto', JSON.stringify(presupuesto))
+    localStorage.setItem('presupuestoAbc', JSON.stringify(presupuestoAbc))
   })
 
 
@@ -178,7 +185,7 @@ export const Home = () => {
     const consultoriaSEO = isCheckedTwo ? true : false;
     const GoogleAds = isCheckedThree ? true : false;
     const now = new Date();
-    const simpleDate = now.getDate() + "/" + now.getMonth() + 1 + "/" + now.getFullYear() + " At " +now.getHours()+" : "+now.getMinutes()+" : "+now.getSeconds()
+    const simpleDate = now.getDate() + "/" + now.getMonth() + 1 + "/" + now.getFullYear() + " At " + now.getHours() + " : " + now.getMinutes() + " : " + now.getSeconds()
 
     setPresupuesto([
       ...presupuesto, {
@@ -194,27 +201,28 @@ export const Home = () => {
         plus: plusWeb,
         total: total,
         fecha: simpleDate,
-        fechaCompleta:now
+        fechaCompleta: now
       }])
-    // setOriginalPresupuesto([
-    //   ...presupuesto, {
-    //     nombre: datosPersonales.nombre,
-    //     titulo: datosPersonales.tituloPresupuesto,
-    //     pagWeb: paginaWeb,
-    //     extras: {
-    //       paginas: extraWeb.paginas,
-    //       idiomas: extraWeb.idiomas
-    //     },
-    //     SEO: consultoriaSEO,
-    //     ads: GoogleAds,
-    //     plus: plusWeb,
-    //     total: total,
-    //     fecha: simpleDate,
-    //     fechaCompleta:now
-    //   }])
-      setOrdenadoAbc(false)
-      setDateCheck(false)
-      setReiniciado(true)
+    setPresupuestoAbc([
+      ...presupuesto, {
+        nombre: datosPersonales.nombre,
+        titulo: datosPersonales.tituloPresupuesto,
+        pagWeb: paginaWeb,
+        extras: {
+          paginas: extraWeb.paginas,
+          idiomas: extraWeb.idiomas
+        },
+        SEO: consultoriaSEO,
+        ads: GoogleAds,
+        plus: plusWeb,
+        total: total,
+        fecha: simpleDate,
+        fechaCompleta: now
+      }])
+
+    setOrdenadoAbc(false)
+    setDateCheck(false)
+    setReiniciado(true)
   }
 
   //ordenar alfabeticamente
@@ -222,8 +230,8 @@ export const Home = () => {
   const [ordenadoAbc, setOrdenadoAbc] = useState(false)
   // const [originalPresupuesto, setOriginalPresupuesto] = useState([])
   const [ordenadoDate, setOrdenadoDate] = useState([])
-  const[dateCheck, setDateCheck] = useState(false)
-  const[reiniciado, setReiniciado] = useState(true)
+  const [dateCheck, setDateCheck] = useState(false)
+  const [reiniciado, setReiniciado] = useState(true)
 
 
   const sortBasicFunction = () => {
@@ -235,31 +243,36 @@ export const Home = () => {
     setReiniciado(false)
     setDateCheck(false)
   }
-  //ordenar por fecha
+  //ordenar por fecha///
   const sortDateFunction = () => {
     const copyPresupuesto = [...presupuesto]
-    setOrdenadoDate(
-      copyPresupuesto.sort(function(a,b){
-        // Turn strings into dates, and then subtract them
-        // to get a value that is either negative, positive, or zero.
+    setPresupuestoAbc(
+      copyPresupuesto.sort(function (a, b) {
         return new Date(b.fechaCompleta) - new Date(a.fechaCompleta);
       })
     )
     setOrdenadoAbc(false)
     setDateCheck(true)
     setReiniciado(false)
-    console.log(ordenadoDate)
   }
 
   const reiniciarFunction = () => {
+    const copyPresupuesto = [...presupuesto]
+    setPresupuestoAbc(
+      copyPresupuesto
+    )
     setOrdenadoAbc(false)
     setDateCheck(false)
     setReiniciado(true)
-
   }
 
+const filterHandle = event =>{
+  const copyPresupuesto = [...presupuesto]
+  const filtro = copyPresupuesto.filter(item=>item.titulo.includes(event.target.value))
+  setPresupuestoAbc(filtro)
+  console.log(presupuesto)
 
-
+}
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
@@ -292,8 +305,6 @@ export const Home = () => {
                 </div>
               </Panell>
             }
-
-
             <div className="form-check">
               <input className="form-check-input" type="checkbox" value="300" id="SEO" onChange={e => handleOnChangeTwo(e)} checked={isCheckedTwo} />
               <label className="form-check-label" htmlFor="flexCheckDefault">
@@ -324,6 +335,7 @@ export const Home = () => {
           <button type="button" className="btn btn-secondary btn-sm" onClick={sortBasicFunction}>Alfabèticament</button>
           <button type="button" className="btn btn-secondary btn-sm" onClick={sortDateFunction}>Per data</button>
           <button type="button" className="btn btn-secondary btn-sm" onClick={reiniciarFunction}>Reinicialitzar </button>
+          <div className='filtroPresupuestos'><input onChange={event=>filterHandle(event)} type="text" placeholder='Buscar presupuesto' className='form-control filtroPresupuestos' /></div>
         </span>
         {ordenadoAbc ?
           presupuestoAbc.map(item =>
@@ -331,28 +343,23 @@ export const Home = () => {
               paginas={item.extras.paginas} idiomas={item.extras.idiomas} seo={item.SEO}
               ads={item.ads} plus={item.plus} total={item.total} fecha={item.fecha} />
 
-          ) :""}
+          ) : ""}
         {dateCheck ?
-          ordenadoDate.map(item =>
+          presupuestoAbc.map(item =>
             <Presupuesto nombre={item.nombre} titulo={item.titulo} pagWeb={item.pagWeb}
               paginas={item.extras.paginas} idiomas={item.extras.idiomas} seo={item.SEO}
               ads={item.ads} plus={item.plus} total={item.total} fecha={item.fecha} />
 
-          ) :""
-
+          ) : ""
         }
         {reiniciado ?//acá mapeaba el presupuestoOriginal
-          presupuesto.map(item =>
+          presupuestoAbc.map(item =>
             <Presupuesto nombre={item.nombre} titulo={item.titulo} pagWeb={item.pagWeb}
               paginas={item.extras.paginas} idiomas={item.extras.idiomas} seo={item.SEO}
               ads={item.ads} plus={item.plus} total={item.total} fecha={item.fecha} />
 
-          ) :""
-
+          ) : ""
         }
-        {/* <Presupuesto nombre={presupuesto.nombre} titulo={presupuesto.titulo} pagWeb={presupuesto.pagWeb}
-       paginas={presupuesto.extras.paginas} idiomas={presupuesto.extras.idiomas} seo={presupuesto.SEO}
-       ads={presupuesto.ads} plus={presupuesto.plus} total = {presupuesto.total} fecha={presupuesto.fecha} /> */}
       </div>
     </div>
   );
