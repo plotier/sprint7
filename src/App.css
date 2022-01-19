@@ -21,6 +21,13 @@
   width: 50%;
 }
 .filtroPresupuestos{
-  width: 275px;
-  margin-bottom: 20px;
+  width:410px;
+  margin-bottom:10px;
+  display: flex ;
+}
+.deleteBox{
+  margin-top: 7px;
+  width: 150px;;
+height: 35px;
+margin-top: 10px;
 }

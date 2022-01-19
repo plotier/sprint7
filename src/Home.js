@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Panell } from './styled';
 import { NumInput } from './components/NumInput.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
+import { faInfoCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import { Popup } from './components/Popup.js'
 import { Presupuesto } from './components/Presupuesto';
 
@@ -268,10 +268,15 @@ export const Home = () => {
 
 const filterHandle = event =>{
   const copyPresupuesto = [...presupuesto]
-  const filtro = copyPresupuesto.filter(item=>item.titulo.includes(event.target.value))
+  const searchWord = event.target.value.toLowerCase()
+  const filtro = copyPresupuesto.filter(item=>item.titulo.toLowerCase().includes(searchWord))
   setPresupuestoAbc(filtro)
-  console.log(presupuesto)
+}
 
+//borrar presupuestos
+const handleClear = event =>{
+  setPresupuestoAbc([])
+  setPresupuesto([])
 }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -331,12 +336,15 @@ const filterHandle = event =>{
         </div>
       </div>
       <div className="col">
-        <span>
-          <button type="button" className="btn btn-secondary btn-sm" onClick={sortBasicFunction}>Alfabèticament</button>
-          <button type="button" className="btn btn-secondary btn-sm" onClick={sortDateFunction}>Per data</button>
-          <button type="button" className="btn btn-secondary btn-sm" onClick={reiniciarFunction}>Reinicialitzar </button>
-          <div className='filtroPresupuestos'><input onChange={event=>filterHandle(event)} type="text" placeholder='Buscar presupuesto' className='form-control filtroPresupuestos' /></div>
-        </span>
+        <div>
+          <button type="button" className="m-1 btn btn-secondary btn-sm" onClick={sortBasicFunction}>Alfabèticament</button>
+          <button type="button" className="m-1  btn btn-secondary btn-sm" onClick={sortDateFunction}>Per data</button>
+          <button type="button" className="m-1  btn btn-secondary btn-sm" onClick={reiniciarFunction}>Reinicialitzar </button>
+          <button className='m-1 btn btn-warning btn-sm' onClick={handleClear}><FontAwesomeIcon  id="1" className='infoBtn' icon={faTrashAlt} /> Clear List
+</button>
+          <div className='filtroPresupuestos'><input onChange={event=>filterHandle(event)} type="text" placeholder='Buscar presupuesto' className='form-control filtroPresupuestos' />
+ </div>
+        </div>
         {ordenadoAbc ?
           presupuestoAbc.map(item =>
             <Presupuesto nombre={item.nombre} titulo={item.titulo} pagWeb={item.pagWeb}
