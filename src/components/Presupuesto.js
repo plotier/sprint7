@@ -17,7 +17,11 @@ export const Presupuesto = props => {
                         {props.seo ? <li>Consultoría SEO (€300)</li> : ""}
                         {props.ads ? <li>Campaña de Google Ads (€200)</li> : ""}
                     </ul>
-                    <h5 className="p -1">{props.total != 0 ? "Total: €" + props.total + " - " + " Fecha: " + props.fecha : ""}</h5>
+                    <div className="p-1">
+                        <p>{props.total != 0 ? "Total: €" + props.total: ""}</p>
+                        <p >{props.total != 0 ? props.fecha : ""}</p>
+                    </div>
+
                 </div>
             }
         </div>

@@ -185,7 +185,7 @@ export const Home = () => {
     const consultoriaSEO = isCheckedTwo ? true : false;
     const GoogleAds = isCheckedThree ? true : false;
     const now = new Date();
-    const simpleDate = now.getDate() + "/" + now.getMonth() + 1 + "/" + now.getFullYear() + " At " + now.getHours() + " : " + now.getMinutes() + " : " + now.getSeconds()
+    const simpleDate = now.getDate() + "/" + now.getMonth() + 1 + "/" + now.getFullYear() + " - " + now.getHours() + " : " + now.getMinutes() + " : " + now.getSeconds()
 
     setPresupuesto([
       ...presupuesto, {
