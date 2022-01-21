@@ -19,8 +19,8 @@ export const Welcome = () => {
 
             </ul>
 
-            <Link to="/home">
-            <button type="button" class="btn btn-primary"> Entrar</button>
+            <Link to="/home?googleAds=true&bar=2">
+            <button type="button" className="btn btn-primary"> Entrar</button>
             </Link>
         </div>
     )

@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faInfoCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import { Popup } from './components/Popup.js'
 import { Presupuesto } from './components/Presupuesto';
+import { useLocation } from "react-router-dom";
+
 
 export const Home = () => {
 
@@ -79,6 +81,7 @@ export const Home = () => {
   const handleOnChangeThree = e => {
     setIsCheckedThree(!isCheckedThree);
     e.target.checked ? setTotalPrice([...totalPrice, parseInt(e.target.value)])
+    
       :
       setTotalPrice(totalPrice => totalPrice.filter(item => item !== parseInt(e.target.value)))
   };
@@ -278,6 +281,21 @@ const handleClear = event =>{
   setPresupuestoAbc([])
   setPresupuesto([])
 }
+
+const url = new URLSearchParams(useLocation().search);
+
+const sea = useLocation().search
+
+useEffect(()=>{
+  url.set('test', 38)
+   
+  console.log(url)
+  // questionId=="true"?setIsCheckedThree(true):setIsCheckedThree(false)
+}) 
+
+
+
+
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
