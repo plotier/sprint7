@@ -8,6 +8,7 @@ import { faInfoCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import { Popup } from './components/Popup.js'
 import { Presupuesto } from './components/Presupuesto';
 import { useLocation } from "react-router-dom";
+ import { useSearchParams } from "react-router-dom"
 
 
 export const Home = () => {
@@ -282,19 +283,39 @@ const handleClear = event =>{
   setPresupuesto([])
 }
 
-const url = new URLSearchParams(useLocation().search);
+let [searchParams, setSearchParams] = useSearchParams()
+const paginaWeb = searchParams.get("paginaWeb")
+const campaniaSeo = searchParams.get("campaniaSeo")
+const campaniaAds = searchParams.get("campaniaAds")
+const nPagines = searchParams.get("nPagines")
+const nIdiomes = searchParams.get("nIdiomes")
+console.log(paginaWeb)
 
-const sea = useLocation().search
+
+
+
+
+useEffect(() => {
+  setSearchParams({paginaWeb: isCheckedOne, campaniaSeo: isCheckedTwo, campaniaAds: isCheckedThree, nPagines: extraWeb.paginas, nIdiomes: extraWeb.idiomas})
+}, [isCheckedOne, isCheckedTwo, isCheckedThree, extraWeb])
 
 useEffect(()=>{
-  url.set('test', 38)
-   
-  console.log(url)
-  // questionId=="true"?setIsCheckedThree(true):setIsCheckedThree(false)
-}) 
+  const paginaWebBoolean = paginaWeb ==="true"
+  const campaniaSeoBoolean = campaniaSeo ==="true"
+  const campaniaAdsBoolean = campaniaAds ==="true"
+  const nPaginesParsed = parseInt(nPagines)
+  const nIdiomesParsed = parseInt(nIdiomes)
 
+setIsCheckedOne(paginaWebBoolean)
+setIsCheckedTwo(campaniaSeoBoolean)
+setIsCheckedThree(campaniaAdsBoolean)
+setExtraWeb({
+  ...extraWeb,
+  paginas:nPaginesParsed,
+  idiomas:nIdiomes
+})
 
-
+},[])
 
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////

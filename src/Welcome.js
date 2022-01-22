@@ -19,7 +19,7 @@ export const Welcome = () => {
 
             </ul>
 
-            <Link to="/home?googleAds=true&bar=2">
+            <Link to="/home/">
             <button type="button" className="btn btn-primary"> Entrar</button>
             </Link>
         </div>
