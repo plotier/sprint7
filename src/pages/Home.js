@@ -1,13 +1,12 @@
 import './App.css';
 import React, { useRef } from 'react';
 import { useState, useEffect } from 'react';
-import { Panell } from './styled';
-import { NumInput } from './components/NumInput.js'
+import { Panell } from '../styled';
+import { NumInput } from '../components/NumInput.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faInfoCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
-import { Popup } from './components/Popup.js'
-import { Presupuesto } from './components/Presupuesto';
-import { useLocation } from "react-router-dom";
+import { Popup } from '../components/Popup.js'
+import { Presupuesto } from '../components/Presupuesto';
 import { useSearchParams } from "react-router-dom"
 
 
