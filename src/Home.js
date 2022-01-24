@@ -38,19 +38,19 @@ export const Home = () => {
   //Local Storage
 
   useEffect(() => {
-    const valueFirstBox = localStorage.getItem('firstCheckBox');
+    let valueFirstBox = localStorage.getItem('firstCheckBox');
     setIsCheckedOne(JSON.parse(valueFirstBox))
     const valueSecondBox = localStorage.getItem('secondCheckBox');
     setIsCheckedTwo(JSON.parse(valueSecondBox))
-    const valueThirdBox = localStorage.getItem('thirdCheckBox');
+    let valueThirdBox = localStorage.getItem('thirdCheckBox');
     setIsCheckedThree(JSON.parse(valueThirdBox))
-    const valueTotalPrice = localStorage.getItem('totalPrice');
+    let valueTotalPrice = localStorage.getItem('totalPrice');
     valueTotalPrice != null ? setTotalPrice(JSON.parse(valueTotalPrice)) : valueTotalPrice = totalPrice
-    const valueExtraWeb = localStorage.getItem('extraWeb');
+    let valueExtraWeb = localStorage.getItem('extraWeb');
     valueExtraWeb != null ? setExtraWeb(JSON.parse(valueExtraWeb)) : valueExtraWeb = extraWeb
-    const valuePresupuesto = localStorage.getItem('presupuesto');
+    let valuePresupuesto = localStorage.getItem('presupuesto');
     valuePresupuesto != null ? setPresupuesto(JSON.parse(valuePresupuesto)) : valuePresupuesto = presupuesto
-    const valuePresupuestoAbc = localStorage.getItem('presupuestoAbc');
+    let valuePresupuestoAbc = localStorage.getItem('presupuestoAbc');
     valuePresupuestoAbc != null ? setPresupuestoAbc(JSON.parse(valuePresupuestoAbc)) : valuePresupuestoAbc = presupuestoAbc
 
   }, [])
@@ -164,7 +164,7 @@ export const Home = () => {
     }
     else { setSumaPrecio(0) }
   })
-
+//////ayayayayayayaya
   //Define si son páginas o idiomas los props del popup
   const [contenidoWeb, setContenidoWeb] = useState("")
   const buttonPopFunction = (dato) => {
@@ -312,6 +312,13 @@ export const Home = () => {
       paginas: newValuenPaginesParsed,
       idiomas: nIdiomesParsedParsed
     })
+    
+    setTotalPrice([
+      ...totalPrice,
+      paginaWebBoolean?(parseInt(500)):(parseInt(0)),
+      campaniaSeoBoolean?(parseInt(300)):(parseInt(0)),
+      campaniaAdsBoolean?(parseInt(200)):(parseInt(0))
+    ])
   }, [])
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
