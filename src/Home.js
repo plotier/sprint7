@@ -8,7 +8,7 @@ import { faInfoCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import { Popup } from './components/Popup.js'
 import { Presupuesto } from './components/Presupuesto';
 import { useLocation } from "react-router-dom";
- import { useSearchParams } from "react-router-dom"
+import { useSearchParams } from "react-router-dom"
 
 
 export const Home = () => {
@@ -25,7 +25,7 @@ export const Home = () => {
   //Suma de los precios por páginas e idiomas en el primer checkbox
   const [plusWeb, setPlusWeb] = useState(1)
   //Suma de los precios de los checkbox + el precio de los plus del primer checkbox
-  const total = sumaPrecio + plusWeb
+  let total = sumaPrecio + plusWeb
 
   //Los tres estados y funciones para comprobar si está o no checkeado el checkbox
   const [isCheckedOne, setIsCheckedOne] = useState(false);
@@ -52,7 +52,7 @@ export const Home = () => {
     valuePresupuesto != null ? setPresupuesto(JSON.parse(valuePresupuesto)) : valuePresupuesto = presupuesto
     const valuePresupuestoAbc = localStorage.getItem('presupuestoAbc');
     valuePresupuestoAbc != null ? setPresupuestoAbc(JSON.parse(valuePresupuestoAbc)) : valuePresupuestoAbc = presupuestoAbc
-    
+
   }, [])
 
   useEffect(() => {
@@ -66,6 +66,7 @@ export const Home = () => {
   })
 
 
+  //Handle de los tres checkbox
 
   const handleOnChangeOne = e => {
     setIsCheckedOne(!isCheckedOne);
@@ -82,12 +83,12 @@ export const Home = () => {
   const handleOnChangeThree = e => {
     setIsCheckedThree(!isCheckedThree);
     e.target.checked ? setTotalPrice([...totalPrice, parseInt(e.target.value)])
-    
+
       :
       setTotalPrice(totalPrice => totalPrice.filter(item => item !== parseInt(e.target.value)))
   };
 
-  //Input onChange numero de paginas e idiomas (Primer checkbox)
+  //Input numero de paginas e idiomas (Primer checkbox)
   const handlePagNum = (event) => {
     let value = parseInt(event.target.value);
     let newValue = (Number.isNaN(value) ? 1 : value);
@@ -99,7 +100,7 @@ export const Home = () => {
     )
   }
   const refInput = useRef(null);
-  const refFunction = event => {  //para hacer un refactor puedo pasar parametros para las funciones en el onClick de los botones
+  const refFunction = event => {  //para hacer un refactor puedo pasar parametros para las funciones en el onClick de los botones o hacer un componente y pasar los nombres por props, mejor
     if (refInput.current.value) {
       refInput.current.value = parseInt(refInput.current.value) + 1
       setExtraWeb(
@@ -110,7 +111,7 @@ export const Home = () => {
       )
     }
   }
-  const refFunctionRest = event => {
+  const refFunctionRest = parametro => {
     if (refInput.current.value && refInput.current.value > 1) {
       refInput.current.value = parseInt(refInput.current.value) - 1
       setExtraWeb(
@@ -149,7 +150,6 @@ export const Home = () => {
     let cantPaginas = extraWeb.paginas
     let cantIdiomas = extraWeb.idiomas
     let resultado = cantIdiomas * cantPaginas * 30
-    // resultado > 30 ? resultado = resultado : resultado = 0;
     isCheckedOne ? resultado = resultado : resultado = 0;
     setPlusWeb(
       resultado
@@ -163,12 +163,15 @@ export const Home = () => {
     }
     else { setSumaPrecio(0) }
   })
+
+  //Define si son páginas o idiomas los props del popup
   const [contenidoWeb, setContenidoWeb] = useState("")
   const buttonPopFunction = (dato) => {
     setButtonPupop(!buttonPupop);
     setContenidoWeb(dato)
   }
 
+  //Ingresar Nombre y Titulo
   const [datosPersonales, setDatosPersonales] = useState({
     nombre: "",
     tituloPresupuesto: ""
@@ -180,14 +183,14 @@ export const Home = () => {
 
     })
   }
-
+  //Constructor de presupuestos cuando se apreta el botón de submit
   const [presupuesto, setPresupuesto] = useState([])
 
   const enviarDatos = event => {
     event.preventDefault()
-    const paginaWeb = isCheckedOne ? true : false;
-    const consultoriaSEO = isCheckedTwo ? true : false;
-    const GoogleAds = isCheckedThree ? true : false;
+    // const paginaWeb = isCheckedOne ? true : false;
+    // const consultoriaSEO = isCheckedTwo ? true : false; esto lo marqué porque abajo en el constructor usaba el nombre de variables en lugar del isCHecked directamente
+    // const GoogleAds = isCheckedThree ? true : false;
     const now = new Date();
     const simpleDate = now.getDate() + "/" + now.getMonth() + 1 + "/" + now.getFullYear() + " - " + now.getHours() + " : " + now.getMinutes() + " : " + now.getSeconds()
 
@@ -195,13 +198,13 @@ export const Home = () => {
       ...presupuesto, {
         nombre: datosPersonales.nombre,
         titulo: datosPersonales.tituloPresupuesto,
-        pagWeb: paginaWeb,
+        pagWeb: isCheckedOne,
         extras: {
           paginas: extraWeb.paginas,
           idiomas: extraWeb.idiomas
         },
-        SEO: consultoriaSEO,
-        ads: GoogleAds,
+        SEO: isCheckedTwo,
+        ads: isCheckedThree,
         plus: plusWeb,
         total: total,
         fecha: simpleDate,
@@ -211,13 +214,13 @@ export const Home = () => {
       ...presupuesto, {
         nombre: datosPersonales.nombre,
         titulo: datosPersonales.tituloPresupuesto,
-        pagWeb: paginaWeb,
+        pagWeb: isCheckedOne,
         extras: {
           paginas: extraWeb.paginas,
           idiomas: extraWeb.idiomas
         },
-        SEO: consultoriaSEO,
-        ads: GoogleAds,
+        SEO: isCheckedTwo,
+        ads: isCheckedThree,
         plus: plusWeb,
         total: total,
         fecha: simpleDate,
@@ -233,11 +236,11 @@ export const Home = () => {
   const [presupuestoAbc, setPresupuestoAbc] = useState([])
   const [ordenadoAbc, setOrdenadoAbc] = useState(false)
   // const [originalPresupuesto, setOriginalPresupuesto] = useState([])
-  const [ordenadoDate, setOrdenadoDate] = useState([])
+  // const [ordenadoDate, setOrdenadoDate] = useState([])
   const [dateCheck, setDateCheck] = useState(false)
   const [reiniciado, setReiniciado] = useState(true)
 
-
+  //ordenar por titulo///
   const sortBasicFunction = () => {
     const copyPresupuesto = [...presupuesto]
     setPresupuestoAbc(
@@ -251,15 +254,13 @@ export const Home = () => {
   const sortDateFunction = () => {
     const copyPresupuesto = [...presupuesto]
     setPresupuestoAbc(
-      copyPresupuesto.sort(function (a, b) {
-        return new Date(b.fechaCompleta) - new Date(a.fechaCompleta);
-      })
+      copyPresupuesto.sort((a, b) => new Date(b.fechaCompleta) - new Date(a.fechaCompleta))
     )
     setOrdenadoAbc(false)
     setDateCheck(true)
     setReiniciado(false)
   }
-
+  //reiniciar orden
   const reiniciarFunction = () => {
     const copyPresupuesto = [...presupuesto]
     setPresupuestoAbc(
@@ -270,53 +271,53 @@ export const Home = () => {
     setReiniciado(true)
   }
 
-const filterHandle = event =>{
-  const copyPresupuesto = [...presupuesto]
-  const searchWord = event.target.value.toLowerCase()
-  const filtro = copyPresupuesto.filter(item=>item.titulo.toLowerCase().includes(searchWord))
-  setPresupuestoAbc(filtro)
-}
 
-//borrar presupuestos
-const handleClear = event =>{
-  setPresupuestoAbc([])
-  setPresupuesto([])
-}
+  //buscar por título
+  const filterHandle = event => {
+    const copyPresupuesto = [...presupuesto]
+    const searchWord = event.target.value.toLowerCase()
+    const filtro = copyPresupuesto.filter(item => item.titulo.toLowerCase().includes(searchWord))
+    setPresupuestoAbc(filtro)
+  }
 
-let [searchParams, setSearchParams] = useSearchParams()
-const paginaWeb = searchParams.get("paginaWeb")
-const campaniaSeo = searchParams.get("campaniaSeo")
-const campaniaAds = searchParams.get("campaniaAds")
-const nPagines = searchParams.get("nPagines")
-const nIdiomes = searchParams.get("nIdiomes")
-console.log(paginaWeb)
+  //borrar presupuestos
+  const handleClear = event => {
+    setPresupuestoAbc([])
+    setPresupuesto([])
+  }
+
+  //manipulación de la url
+  let [searchParams, setSearchParams] = useSearchParams()
+  const paginaWeb = searchParams.get("paginaWeb")
+  const campaniaSeo = searchParams.get("campaniaSeo")
+  const campaniaAds = searchParams.get("campaniaAds")
+  const nPagines = searchParams.get("nPagines")
+  const nIdiomes = searchParams.get("nIdiomes")
 
 
+  useEffect(() => {
+    setSearchParams({ paginaWeb: isCheckedOne, campaniaSeo: isCheckedTwo, campaniaAds: isCheckedThree, nPagines: extraWeb.paginas, nIdiomes: extraWeb.idiomas })
+  }, [isCheckedOne, isCheckedTwo, isCheckedThree, extraWeb])
 
+  useEffect(() => {
+    const paginaWebBoolean = paginaWeb === "true"
+    const campaniaSeoBoolean = campaniaSeo === "true"
+    const campaniaAdsBoolean = campaniaAds === "true"
+    const nPaginesParsed = parseInt(nPagines)
+    const nIdiomesParsed = parseInt(nIdiomes)
 
-
-useEffect(() => {
-  setSearchParams({paginaWeb: isCheckedOne, campaniaSeo: isCheckedTwo, campaniaAds: isCheckedThree, nPagines: extraWeb.paginas, nIdiomes: extraWeb.idiomas})
-}, [isCheckedOne, isCheckedTwo, isCheckedThree, extraWeb])
-
-useEffect(()=>{
-  const paginaWebBoolean = paginaWeb ==="true"
-  const campaniaSeoBoolean = campaniaSeo ==="true"
-  const campaniaAdsBoolean = campaniaAds ==="true"
-  const nPaginesParsed = parseInt(nPagines)
-  const nIdiomesParsed = parseInt(nIdiomes)
-
-setIsCheckedOne(paginaWebBoolean)
-setIsCheckedTwo(campaniaSeoBoolean)
-setIsCheckedThree(campaniaAdsBoolean)
-setExtraWeb({
-  ...extraWeb,
-  paginas:nPaginesParsed,
-  idiomas:nIdiomes
-})
-
-},[])
-
+    setIsCheckedOne(paginaWebBoolean)
+    setIsCheckedTwo(campaniaSeoBoolean)
+    setIsCheckedThree(campaniaAdsBoolean)
+    let newValuenPaginesParsed = (Number.isNaN(nPaginesParsed) ? 1 : nPaginesParsed);
+    let nIdiomesParsedParsed = (Number.isNaN(nIdiomesParsed) ? 1 : nIdiomesParsed);
+    setExtraWeb({
+      ...extraWeb,
+      paginas: newValuenPaginesParsed,
+      idiomas: nIdiomesParsedParsed
+    })
+  }, [])
+  ////////////////////////////comienza el refactor
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
@@ -339,11 +340,11 @@ setExtraWeb({
               <Panell>
                 {/* !!!!!!este div y su closing tag eran form*/}     <div className='d-flex flex-column'>
                   <label htmlFor="paginas" className='m-2'>Número de páginas:
-                    <button type="button" className="btn btn-success" onClick={refFunctionRest}>-</button>  <NumInput referencia={refInput} valor={extraWeb.paginas} name={"paginas"} funcion={handlePagNum} /><button type="button" className="btn btn-success" onClick={refFunction}>+</button>
+                    <NumInput referencia={refInput} valor={extraWeb.paginas} name={"paginas"} funcion={handlePagNum} funcionSum={refFunction} funcionRes={refFunctionRest} />
                     <FontAwesomeIcon onClick={() => buttonPopFunction("paginas")} id="1" className='infoBtn' icon={faInfoCircle} />
                   </label>
                   <label htmlFor="idiomas" className='m-2'>Número de idiomas:
-                    <button type="button" className="btn btn-success" onClick={refFunctionRest2}>-</button> <NumInput referencia={refInput2} valor={extraWeb.idiomas} name={"idiomas"} funcion={handlePagNum} /><button type="button" className="btn btn-success" onClick={refFunction2}>+</button>
+                    <NumInput referencia={refInput2} valor={extraWeb.idiomas} name={"idiomas"} funcion={handlePagNum} funcionSum={refFunction2} funcionRes={refFunctionRest2} />
                     <FontAwesomeIcon onClick={() => buttonPopFunction("idiomas")} id="2" className='infoBtn' icon={faInfoCircle} />
                   </label>
                 </div>
@@ -379,10 +380,10 @@ setExtraWeb({
           <button type="button" className="m-1 btn btn-secondary btn-sm" onClick={sortBasicFunction}>Alfabèticament</button>
           <button type="button" className="m-1  btn btn-secondary btn-sm" onClick={sortDateFunction}>Per data</button>
           <button type="button" className="m-1  btn btn-secondary btn-sm" onClick={reiniciarFunction}>Reinicialitzar </button>
-          <button className='m-1 btn btn-warning btn-sm' onClick={handleClear}><FontAwesomeIcon  id="1" className='infoBtn' icon={faTrashAlt} /> Clear List
-</button>
-          <div className='filtroPresupuestos'><input onChange={event=>filterHandle(event)} type="text" placeholder='Buscar presupuesto' className='form-control filtroPresupuestos' />
- </div>
+          <button className='m-1 btn btn-warning btn-sm' onClick={handleClear}><FontAwesomeIcon id="1" className='infoBtn' icon={faTrashAlt} /> Clear List
+          </button>
+          <div className='filtroPresupuestos'><input onChange={event => filterHandle(event)} type="text" placeholder='Buscar presupuesto' className='form-control filtroPresupuestos' />
+          </div>
         </div>
         {ordenadoAbc ?
           presupuestoAbc.map(item =>
