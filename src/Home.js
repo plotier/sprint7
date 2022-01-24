@@ -31,7 +31,7 @@ export const Home = () => {
   const [isCheckedOne, setIsCheckedOne] = useState(false);
   const [isCheckedTwo, setIsCheckedTwo] = useState(false);
   const [isCheckedThree, setIsCheckedThree] = useState(false);
-
+ //Pupop
   const [buttonPupop, setButtonPupop] = useState(false);
 
 
@@ -99,6 +99,7 @@ export const Home = () => {
       }
     )
   }
+  //esto se puede reducir
   const refInput = useRef(null);
   const refFunction = event => {  //para hacer un refactor puedo pasar parametros para las funciones en el onClick de los botones o hacer un componente y pasar los nombres por props, mejor
     if (refInput.current.value) {
@@ -188,9 +189,6 @@ export const Home = () => {
 
   const enviarDatos = event => {
     event.preventDefault()
-    // const paginaWeb = isCheckedOne ? true : false;
-    // const consultoriaSEO = isCheckedTwo ? true : false; esto lo marqué porque abajo en el constructor usaba el nombre de variables en lugar del isCHecked directamente
-    // const GoogleAds = isCheckedThree ? true : false;
     const now = new Date();
     const simpleDate = now.getDate() + "/" + now.getMonth() + 1 + "/" + now.getFullYear() + " - " + now.getHours() + " : " + now.getMinutes() + " : " + now.getSeconds()
 
@@ -235,8 +233,6 @@ export const Home = () => {
   //ordenar alfabeticamente
   const [presupuestoAbc, setPresupuestoAbc] = useState([])
   const [ordenadoAbc, setOrdenadoAbc] = useState(false)
-  // const [originalPresupuesto, setOriginalPresupuesto] = useState([])
-  // const [ordenadoDate, setOrdenadoDate] = useState([])
   const [dateCheck, setDateCheck] = useState(false)
   const [reiniciado, setReiniciado] = useState(true)
 
@@ -317,7 +313,6 @@ export const Home = () => {
       idiomas: nIdiomesParsedParsed
     })
   }, [])
-  ////////////////////////////comienza el refactor
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
