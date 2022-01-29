@@ -1,13 +1,12 @@
 import './App.css';
 import React, { useRef } from 'react';
 import { useState, useEffect } from 'react';
-import { Panell } from './styled';
-import { NumInput } from './components/NumInput.js'
+import { Panell } from '../styled';
+import { NumInput } from '../components/NumInput.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faInfoCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
-import { Popup } from './components/Popup.js'
-import { Presupuesto } from './components/Presupuesto';
-import { useLocation } from "react-router-dom";
+import { Popup } from '../components/Popup.js'
+import { Presupuesto } from '../components/Presupuesto';
 import { useSearchParams } from "react-router-dom"
 
 
@@ -31,26 +30,26 @@ export const Home = () => {
   const [isCheckedOne, setIsCheckedOne] = useState(false);
   const [isCheckedTwo, setIsCheckedTwo] = useState(false);
   const [isCheckedThree, setIsCheckedThree] = useState(false);
-
+ //Pupop
   const [buttonPupop, setButtonPupop] = useState(false);
 
 
   //Local Storage
 
   useEffect(() => {
-    const valueFirstBox = localStorage.getItem('firstCheckBox');
+    let valueFirstBox = localStorage.getItem('firstCheckBox');
     setIsCheckedOne(JSON.parse(valueFirstBox))
     const valueSecondBox = localStorage.getItem('secondCheckBox');
     setIsCheckedTwo(JSON.parse(valueSecondBox))
-    const valueThirdBox = localStorage.getItem('thirdCheckBox');
+    let valueThirdBox = localStorage.getItem('thirdCheckBox');
     setIsCheckedThree(JSON.parse(valueThirdBox))
-    const valueTotalPrice = localStorage.getItem('totalPrice');
+    let valueTotalPrice = localStorage.getItem('totalPrice');
     valueTotalPrice != null ? setTotalPrice(JSON.parse(valueTotalPrice)) : valueTotalPrice = totalPrice
-    const valueExtraWeb = localStorage.getItem('extraWeb');
+    let valueExtraWeb = localStorage.getItem('extraWeb');
     valueExtraWeb != null ? setExtraWeb(JSON.parse(valueExtraWeb)) : valueExtraWeb = extraWeb
-    const valuePresupuesto = localStorage.getItem('presupuesto');
+    let valuePresupuesto = localStorage.getItem('presupuesto');
     valuePresupuesto != null ? setPresupuesto(JSON.parse(valuePresupuesto)) : valuePresupuesto = presupuesto
-    const valuePresupuestoAbc = localStorage.getItem('presupuestoAbc');
+    let valuePresupuestoAbc = localStorage.getItem('presupuestoAbc');
     valuePresupuestoAbc != null ? setPresupuestoAbc(JSON.parse(valuePresupuestoAbc)) : valuePresupuestoAbc = presupuestoAbc
 
   }, [])
@@ -99,6 +98,7 @@ export const Home = () => {
       }
     )
   }
+  //esto se puede reducir
   const refInput = useRef(null);
   const refFunction = event => {  //para hacer un refactor puedo pasar parametros para las funciones en el onClick de los botones o hacer un componente y pasar los nombres por props, mejor
     if (refInput.current.value) {
@@ -163,7 +163,7 @@ export const Home = () => {
     }
     else { setSumaPrecio(0) }
   })
-
+//////ayayayayayayaya
   //Define si son páginas o idiomas los props del popup
   const [contenidoWeb, setContenidoWeb] = useState("")
   const buttonPopFunction = (dato) => {
@@ -188,9 +188,6 @@ export const Home = () => {
 
   const enviarDatos = event => {
     event.preventDefault()
-    // const paginaWeb = isCheckedOne ? true : false;
-    // const consultoriaSEO = isCheckedTwo ? true : false; esto lo marqué porque abajo en el constructor usaba el nombre de variables en lugar del isCHecked directamente
-    // const GoogleAds = isCheckedThree ? true : false;
     const now = new Date();
     const simpleDate = now.getDate() + "/" + now.getMonth() + 1 + "/" + now.getFullYear() + " - " + now.getHours() + " : " + now.getMinutes() + " : " + now.getSeconds()
 
@@ -235,8 +232,6 @@ export const Home = () => {
   //ordenar alfabeticamente
   const [presupuestoAbc, setPresupuestoAbc] = useState([])
   const [ordenadoAbc, setOrdenadoAbc] = useState(false)
-  // const [originalPresupuesto, setOriginalPresupuesto] = useState([])
-  // const [ordenadoDate, setOrdenadoDate] = useState([])
   const [dateCheck, setDateCheck] = useState(false)
   const [reiniciado, setReiniciado] = useState(true)
 
@@ -316,8 +311,14 @@ export const Home = () => {
       paginas: newValuenPaginesParsed,
       idiomas: nIdiomesParsedParsed
     })
+    
+    setTotalPrice([
+      ...totalPrice,
+      paginaWebBoolean?(parseInt(500)):(parseInt(0)),
+      campaniaSeoBoolean?(parseInt(300)):(parseInt(0)),
+      campaniaAdsBoolean?(parseInt(200)):(parseInt(0))
+    ])
   }, [])
-  ////////////////////////////comienza el refactor
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
